@@ -8,10 +8,9 @@ kumaURL="http://kuma:9070"
 set -euo pipefail
 
 # Will use latest value, CPU usage for last 15 min.
-cpuUsage15Min=$(uptime | awk '{print $NF}' | sed 's/,//' )
-
 # Convert to integer scaled by 100 (e.g. 3.42 → 342)
-cpuUsageScaled=$(printf "%.0f" "$(echo "$cpuUsage15Min * 100" | bc -l)")
+read -r _ _ cpuUsage15Min _ < /proc/loadavg
+cpuUsageScaled=$(awk -v val="$cpuUsage15Min" 'BEGIN { printf "%.0f", val * 100 }')
 
 if [[ "$cpuUsageScaled" -le "$notifyThreshold" ]]; then
   curl -fsS -o /dev/null --retry 2 -m 10 "$kumaURL/api/push/$kumaToken?status=up&msg=OK&ping=$cpuUsage15Min"
