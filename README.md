@@ -28,6 +28,7 @@ sudo -u nobody crontab -e
 @hourly /usr/local/bin/kuma-disk-space.sh #Report free disk space to Kuma and error if too less
 */15 * * * * /usr/local/bin/kuma-cpu-usage.sh #Report CPU usage to Kuma and error if too less
 */5 * * * * /usr/local/bin/kuma-ram-usage.sh #Report free ram usage
+*/5 * * * * /usr/local/bin/kuma-docker-compose.sh #Report failed docker container from given docker compose, ping graph is not used
 ```
 
 "Ping" will be used to display graph, e.g. for my CPU usage with treshold `400` it will looks like this:
